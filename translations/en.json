@@ -3,5 +3,6 @@
     "open-note": "Open Box Note",
     "exit-app": "Exit",    
     "tit-wrong-file": "Warning",
-    "msg-wrong-file": "The selected file is not a Box Note"
+    "msg-wrong-file": "The selected file is not a Box Note",
+    "Note not exists": "Note not exists"
 }

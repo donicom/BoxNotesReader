@@ -1,6 +1,6 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron/main');
 const path = require('node:path');
-const fs = require('node:fs');
+const { readFileSync, statSync } = require('node:fs');
 const { dialog } = require('electron')
 const trans = require('./translations/i18n');
 require("electron-reload")(__dirname);
@@ -16,9 +16,9 @@ ipcMain.on('image-path', (event, fileName) => {
 })
 
 const createWindow = () => {
-  const mainWindow  = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width: 800,
-    height: 600, 
+    height: 600,
     title: titleText,
     icon: './assets/icons/favicon.ico',
     webPreferences: {
@@ -27,6 +27,24 @@ const createWindow = () => {
   });
 
   mainWindow.loadFile('index.html');
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    if (process.argv.length > 1) {
+      let filepath = process.argv[1];
+      if (path.extname(filepath) == '.boxnote') {
+        let stats = statSync(filepath, { throwIfNoEntry: false });
+        if (stats && stats.isFile()) {
+          const data = readFileSync(filepath, 'utf8');
+          noteName = path.basename(filepath, '.boxnote');
+          notePath = path.dirname(filepath);
+          mainWindow.webContents.send('show-note', noteName, data)
+          mainWindow.setTitle(titleText + " - " + filepath)
+        } else {
+          dialog.showErrorBox(i18n.__("Note not exists"), "");
+        }
+      }
+    }
+  })
 
   const isMac = process.platform === 'darwin';
 
@@ -43,26 +61,27 @@ const createWindow = () => {
                 { name: 'Box Notes', extensions: ['boxnote'] }
               ]
             })
-            if(fileNote) {
+            if (fileNote) {
               try {
-                const data = fs.readFileSync(fileNote[0], 'utf8');
+                const data = readFileSync(fileNote[0], 'utf8');
                 noteName = path.basename(fileNote[0], '.boxnote');
                 notePath = path.dirname(fileNote[0]);
                 mainWindow.webContents.send('show-note', noteName, data)
-                mainWindow.setTitle(titleText + " - " + fileNote[0]) 
+                mainWindow.setTitle(titleText + " - " + fileNote[0])
               } catch (err) {
                 console.error(err);
-              }              
+              }
             }
           }
         },
-        isMac ? { role: 'close',  label: i18n.__('exit-app')} : { role: 'quit', label: i18n.__('exit-app') }
+        isMac ? { role: 'close', label: i18n.__('exit-app') } : { role: 'quit', label: i18n.__('exit-app') }
       ]
     }
   ]
 
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
+
 }
 
 app.whenReady().then(() => {
@@ -75,24 +94,7 @@ app.whenReady().then(() => {
       createWindow()
     }
   })
-
-  app.on("open-file", function(event, filepath) {
-    event.preventDefault();
-    dialog.showErrorBox(i18n.__('tit-wrong-file'), i18n.__('msg-wrong-file')); 
-    if(path.endsWith(filepath,'.boxnote')) {
-        const data = fs.readFileSync(filepath, 'utf8');
-        noteName = path.basename(filepath, '.boxnote');
-        notePath = path.dirname(filepath);
-        mainWindow.webContents.send('show-note', noteName, data)
-        mainWindow.setTitle(titleText + " - " + filepath)
-        filepath = null;
-    } else {
-      dialog.showErrorBox(i18n.__('tit-wrong-file'), i18n.__('msg-wrong-file'));    
-    }
-  });
 })
-
-
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

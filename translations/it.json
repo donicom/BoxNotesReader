@@ -3,5 +3,6 @@
     "open-note": "Apri Nota Box",
     "exit-app": "Esci",
     "tit-wrong-file": "Attenzione",
-    "msg-wrong-file": "Il file non è una Nota"
+    "msg-wrong-file": "Il file non è una Nota",
+    "Note not exists": "La Nota non esiste"
 }
