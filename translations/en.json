@@ -1,0 +1,7 @@
+{
+    "title": "Box Note Reader",
+    "open-note": "Open Box Note",
+    "exit-app": "Exit",    
+    "tit-wrong-file": "Warning",
+    "msg-wrong-file": "The selected file is not a Box Note"
+}

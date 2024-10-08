@@ -1,0 +1,7 @@
+out/
+node_modules/
+.vscode/
+BoxNotesReader.pfx
+package.json
+package-lock.json
+forge.config.js
