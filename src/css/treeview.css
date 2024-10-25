@@ -1,0 +1,49 @@
+@scope (#treeview) {
+    li {
+        width: max-content;
+        cursor: pointer;
+    }
+
+    * {
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
+    }
+
+    ul.folder {
+        padding-left:1.4rem
+    }
+
+    li.box:not(.open) + li {
+        display: none;
+    }
+
+    li.folder:not(.open) > ul {
+        display: none;
+    }
+
+    li.note::before,
+    li.box::before,
+    li.folder::before {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        margin-right: 5px;
+        vertical-align: sub;
+        content: " ";
+    }
+
+    li.note::before {
+        background-image: url("../assets/icons/doc-1513.png");
+    }
+
+    li.box::before,
+    li.folder::before {
+        background-image: url("../assets/icons/folder-close.png");
+    }
+
+    li.box.open::before,
+    li.folder.open::before {
+        background-image: url("../assets/icons/folder-open.png");
+    }
+}

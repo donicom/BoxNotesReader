@@ -4,5 +4,6 @@
     "exit-app": "Esci",
     "tit-wrong-file": "Attenzione",
     "msg-wrong-file": "Il file non è una Nota",
-    "Note not exists": "La Nota non esiste"
+    "Note not exists": "La Nota non esiste",
+    "Note was not syncronized in local directory": "La nota non è stata sincronizzata nella cartella locale"
 }

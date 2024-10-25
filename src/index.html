@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/notes.css">
+    <link rel="stylesheet" href="./css/treeview.css">
+  </head>
+  <body>
+    <div class="w-full h-screen grid grid-cols-[min-content_auto] grid-rows-1 p-5">
+      <div id="side-bar" class="flex">
+        <div id="treeview" class="flex-1 overflow-auto">
+        </div>
+        <div id="resize-bar" class="cursor-col-resize bg-gray-300" />
+        </div>
+      </div>
+      <div id="box-content" class="box-note p-5 overflow-auto">
+        <h1 id="note-title"></h1>
+        <div id="box-note"></div>
+      </div>
+    </div>
+    <script src="./boxNotesToHtml.js"></script>
+    <script src="./treeview.js"></script>
+    <script src="./renderer.js"></script>
+  </body>
+</html>
