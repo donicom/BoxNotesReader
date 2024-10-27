@@ -7,6 +7,7 @@ const path = require("path")
 const electron = require('electron')
 const fs = require('fs');
 const extension = '.json'
+const location = 'assets/translations'
 let loadedLanguage;
 let app = electron.app ? electron.app : electron.remote.app
 
@@ -14,10 +15,11 @@ module.exports = i18n;
 
 function i18n() {
     let transFileName = 'en' + extension
-    if(fs.existsSync(path.join(__dirname, app.getLocale() + extension))) {
+
+    if(fs.existsSync(path.join(__dirname, location, app.getLocale() + extension))) {
         transFileName = app.getLocale() + extension
     }
-    loadedLanguage = JSON.parse(fs.readFileSync(path.join(__dirname, transFileName), 'utf8'))
+    loadedLanguage = JSON.parse(fs.readFileSync(path.join(__dirname, location, transFileName), 'utf8'))
 }
 
 i18n.prototype.__ = function(phrase) {

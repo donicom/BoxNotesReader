@@ -5,6 +5,12 @@ Only the build for Windows is published because the Box Drive application is ava
 
 You can browse the local Box syncrinisation directory if Box Driver is installed in your system and set the application as default app to open .notebox files instead of the online Box Notes editor.
 
+The search are made on the opened folders only.
+
 <p align="center">
   <img src="https://github.com/donicom/BoxNotesReader/blob/main/screen.png?raw=true" alt="Box Notes Reader Screen"/>
 </p>
+
+## Translations
+- English
+- Italian

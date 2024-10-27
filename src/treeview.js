@@ -45,9 +45,14 @@ function TreeView(ref) {
     }
 
     function openNote(node) {
-        return function eventHandler(e) {
+        return function eventHandler(e) {            
             const value = window.electronAPI.openNote(node.path)
             if(value) {
+                var elems = document.querySelectorAll("li.note.selected");
+                [].forEach.call(elems, function(el) {
+                    el.classList.remove("selected");
+                });
+                this.classList.add('selected')
                 const titleRef = document.getElementById('note-title')
                 titleRef.innerText = node.name
                 const renderer = new BoxNotesToHtml('box-note')
@@ -56,12 +61,21 @@ function TreeView(ref) {
         }
     }
 
+    function openParentDir(node) {
+        let parentDir = node.parentNode.closest('li.folder')
+        if(parentDir && !parentDir.isEqualNode(node)) {
+            parentDir.classList.add('open')
+            openParentDir(parentDir)
+        } else {
+            parentDir = document.querySelector('li.box')
+            parentDir.classList.add('open')
+        }
+    }
+
     this.render = function(data) {
         let dataObject = JSON.parse(data)
         const content = document.getElementById(_ref)
         content.innerHTML = ""
-        let search = document.createElement("div")
-        content.appendChild(search)    
         let tree = document.createElement("ul")
         let box = document.createElement("li")
         box.innerText = "Box";
@@ -76,6 +90,23 @@ function TreeView(ref) {
         mainLi.appendChild(box)
         tree.appendChild(mainLi)
         content.appendChild(tree)
+    }
+
+    this.search = function(text) {
+        const treeContent = document.getElementById(_ref)
+        const notes = treeContent.querySelectorAll("li.note")
+        let note = null;
+        notes.forEach((n) => {
+            let span = n.querySelector('span')
+            if(span.textContent.toLowerCase().includes(text.toLowerCase())) {
+                note = n
+                return false
+            }
+        })
+        if(note) {
+            note.click()
+            openParentDir(note)
+        }
     }
 }
 

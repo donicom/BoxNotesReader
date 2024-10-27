@@ -3,7 +3,7 @@ const pathUtil = require('node:path');
 
 class FileTree {
 
-    constructor(path, name, type = null) {
+    constructor(path, name = "", type = null) {
         this.path = path;
         this.name = name;
         this.type = type

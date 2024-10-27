@@ -11,14 +11,28 @@
       http-equiv="X-Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
-    <link rel="stylesheet" href="./css/main.css">
-    <link rel="stylesheet" href="./css/notes.css">
-    <link rel="stylesheet" href="./css/treeview.css">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/notes.css">
+    <link rel="stylesheet" href="./assets/css/treeview.css">
   </head>
   <body>
     <div class="w-full h-screen grid grid-cols-[min-content_auto] grid-rows-1 p-5">
       <div id="side-bar" class="flex">
         <div id="treeview" class="flex-1 overflow-auto">
+          <div class="flex items-center">
+            <div class="flex-1">
+              <input id="searchText" type="search" class="w-full my-2 border-gray-400 rounded-lg border-solid border-[1px] pl-2 outline-offset-0" />
+            </div>            
+            <div class="flex-none">
+              <button id="search">
+              </button>
+            </div>            
+            <div class="flex-none">
+              <button id="refresh">
+              </button>
+            </div>
+          </div>
+          <div id="tree"></div>
         </div>
         <div id="resize-bar" class="cursor-col-resize bg-gray-300" />
         </div>

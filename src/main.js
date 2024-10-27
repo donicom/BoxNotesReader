@@ -1,22 +1,31 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron/main');
 const path = require('node:path');
 const { readFileSync, statSync } = require('node:fs');
-const { dialog } = require('electron')
-const trans = require('./translations/i18n');
+const { dialog, shell } = require('electron')
+const trans = require('./i18n');
 const regedit = require('regedit');
 const FileTree = require('./fileTree');
 const promisifiedRegedit = require('regedit').promisified;
-//require("electron-reload")(__dirname);
 
-var notePath, noteName, i18n, titleText;
+var notePath, noteName, i18n, titleText, boxSyncDir;
 
-regedit.setExternalVBSLocation('resources/regedit/vbs');
+const devtools = /devtools/.test(process.argv[2])
+
+if(devtools) {
+  require("electron-reload")(__dirname);
+}
+
+regedit.setExternalVBSLocation('resources/vbs');
 
 if (require('electron-squirrel-startup')) app.quit();
 
 /**
  * Get image file path 
  */
+ipcMain.on('translate', (event, text) => {
+  event.returnValue = i18n.__(text);
+})
+
 ipcMain.on('image-path', (event, fileName) => {
   event.returnValue = path.join(notePath, "Box Notes Images", noteName + " Images", fileName);
 })
@@ -37,7 +46,13 @@ ipcMain.on('open-note', (event, filepath) => {
 })
 
 ipcMain.on('open-path', (event, dirpath) => {
-  let treeFile = new FileTree(dirpath, "BOX")
+  let treeFile = new FileTree(dirpath)
+  treeFile.build()
+  event.returnValue = JSON.stringify(treeFile)  
+})
+
+ipcMain.on('reload-box-path', (event) => {
+  let treeFile = new FileTree(boxSyncDir, "BOX")
   treeFile.build()
   event.returnValue = JSON.stringify(treeFile)  
 })
@@ -53,14 +68,15 @@ const createWindow = () => {
     }
   });
 
-  //mainWindow.webContents.openDevTools();
+  if(devtools) {
+    mainWindow.webContents.openDevTools();
+  }
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   mainWindow.webContents.on('did-finish-load', () => {
-
     //Get box sync dir, if Box Driver is installed
-    let boxSyncDir = "";
+    boxSyncDir = "";
     promisifiedRegedit.list(['HKCU\\Software\\Box\\Box\\preferences'])
     .then((entry) => {
         if(entry['HKCU\\Software\\Box\\Box\\preferences'].exists) {
@@ -69,7 +85,8 @@ const createWindow = () => {
     })
     .finally(() => {
       var tree = null
-      if(boxSyncDir) {
+      if(boxSyncDir) {        
+        app.applicationMenu.getMenuItemById('open-box-drive').visible = true
         treeFile = new FileTree(boxSyncDir, "BOX")
         treeFile.build()
         tree = JSON.stringify(treeFile)
@@ -131,6 +148,15 @@ const createWindow = () => {
             }
           }
         },
+        {
+          id: 'open-box-drive',
+          label: i18n.__('Open Box Drive'),
+          visible: false,
+          click: async () => {
+            shell.openPath(boxSyncDir)
+          },
+        },
+        { type: 'separator' },
         isMac ? { role: 'close', label: i18n.__('exit-app') } : { role: 'quit', label: i18n.__('exit-app') }
       ]
     }

@@ -5,5 +5,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     onBoxDir: (callback) => ipcRenderer.on('box-dir', (_event, tree) => callback(tree)),
     getImagePath: (fileName) => ipcRenderer.sendSync('image-path', fileName),
     openNote: (filepath) => ipcRenderer.sendSync('open-note', filepath),
-    openPath: (dirpath) => ipcRenderer.sendSync('open-path', dirpath)
+    openPath: (dirpath) => ipcRenderer.sendSync('open-path', dirpath),
+    reloadBoxDir: () => ipcRenderer.sendSync('reload-box-path'),
+    i18n: (text) => ipcRenderer.sendSync('translate', text)
 })

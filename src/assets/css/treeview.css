@@ -1,17 +1,36 @@
 @scope (#treeview) {
-    li {
-        width: max-content;
-        cursor: pointer;
-    }
-
+    
     * {
         -webkit-user-select: none; /* Safari */
         -ms-user-select: none; /* IE 10 and IE 11 */
         user-select: none; /* Standard syntax */
     }
 
+    button {
+        margin: 3px;
+        width: 16px;
+        height: 16px;
+    }
+
+    #search {
+        background: url('../icons/search.png') no-repeat;
+    }
+    
+    #refresh {
+        background: url('../icons/refresh.png') no-repeat;
+    }
+
     ul.folder {
         padding-left:1.4rem
+    }
+
+    li {
+        width: max-content;
+        cursor: pointer;
+    }
+
+    li.selected {
+        background-color: khaki
     }
 
     li.box:not(.open) + li {
@@ -34,16 +53,16 @@
     }
 
     li.note::before {
-        background-image: url("../assets/icons/doc-1513.png");
+        background-image: url("../icons/doc-1513.png");
     }
 
     li.box::before,
     li.folder::before {
-        background-image: url("../assets/icons/folder-close.png");
+        background-image: url("../icons/folder-close.png");
     }
 
     li.box.open::before,
     li.folder.open::before {
-        background-image: url("../assets/icons/folder-open.png");
+        background-image: url("../icons/folder-open.png");
     }
 }
